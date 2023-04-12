@@ -11,7 +11,8 @@ import java.io.IOException;
 public class LocatripApp extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setContentType("application/json");
-        resp.getWriter().println("{'message' : 'Hello World'}");
+        resp.getWriter().println("{\"message\" : \"Hello World\"}");
     }
 }
