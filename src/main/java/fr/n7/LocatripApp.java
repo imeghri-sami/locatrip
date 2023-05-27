@@ -1,7 +1,9 @@
 package fr.n7;
 
-import fr.n7.resources.Hello;
-import fr.n7.resources.PropertyRessource;
+import fr.n7.resources.PropertyImageResource;
+import fr.n7.resources.PropertyResource;
+import fr.n7.resources.PropertyReviewResource;
+import fr.n7.resources.UserResource;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -13,7 +15,10 @@ public class LocatripApp extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> set = new HashSet<>();
-        set.add(PropertyRessource.class);
+        set.add(PropertyResource.class);
+        set.add(PropertyImageResource.class);
+        set.add(UserResource.class);
+        set.add(PropertyReviewResource.class);
         return set;
     }
 }
