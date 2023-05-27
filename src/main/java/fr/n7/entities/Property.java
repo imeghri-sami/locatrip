@@ -26,11 +26,11 @@ public class Property {
 
     private Date availabilityEndDate;
 
-    private int bedroomCount;
+    private int bedroomCount = 0;
 
-    private int bedCount;
+    private int bedCount = 0;
 
-    private int guestCount;
+    private int guestCount = 0;
 
     @OneToMany(mappedBy="property", fetch = FetchType.EAGER)
     private List<PropertyImages> images;

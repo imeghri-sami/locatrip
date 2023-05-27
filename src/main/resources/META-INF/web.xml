@@ -1,0 +1,15 @@
+<web-app>
+    <!-- Other configuration -->
+
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>fr.n7.config.CorsFilter</filter-class> <!-- Replace with the actual package and class name -->
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Other configuration -->
+</web-app>

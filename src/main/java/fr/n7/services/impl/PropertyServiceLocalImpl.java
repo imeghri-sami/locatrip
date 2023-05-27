@@ -6,6 +6,7 @@ import fr.n7.services.PropertyServiceLocal;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -35,5 +36,18 @@ public class PropertyServiceLocalImpl implements PropertyServiceLocal {
     public void delete(Integer id) {
         Property property = findOne(id).orElseThrow(NotFoundException::new);
         em.remove(property);
+    }
+
+    @Override
+    public List<Property> findByType(String type) {
+        TypedQuery<Property> query = em.createQuery(
+                "FROM Property p WHERE p.type.name = :type", Property.class
+        );
+
+
+        query.setParameter("type", type);
+
+        return query.getResultList();
+
     }
 }

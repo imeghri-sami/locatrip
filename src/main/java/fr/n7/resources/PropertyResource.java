@@ -19,6 +19,21 @@ public class PropertyResource {
     public Response retrieveAll(){
         return Response
                 .ok(propertyServiceLocal.findAll())
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Headers",
+                        "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods",
+                        "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
+    }
+
+    @GET
+    @Path("/{type}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllByType(@PathParam("type") String type){
+        return Response
+                .ok(propertyServiceLocal.findByType(type))
                 .build();
     }
 
@@ -26,8 +41,9 @@ public class PropertyResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Property property){
-        // TODO : create a property
-        throw new UnsupportedOperationException("PropertyResource::create is not implemented");
+        propertyServiceLocal.save(property);
+
+        return Response.ok().build();
     }
 
     @DELETE

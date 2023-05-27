@@ -28,7 +28,7 @@ public class PropertyImageResource {
             File imageFile = new File(
                     this.getClass()
                             .getClassLoader()
-                            .getResource(propertyImage.getImagePath())
+                            .getResource(propertyImage.getImagePath() + ".jpg")
                             .getFile()
             );
 
