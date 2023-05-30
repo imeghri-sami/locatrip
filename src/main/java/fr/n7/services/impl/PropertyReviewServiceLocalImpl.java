@@ -1,5 +1,6 @@
 package fr.n7.services.impl;
 
+import fr.n7.entities.Property;
 import fr.n7.entities.PropertyReview;
 import fr.n7.services.PropertyReviewServiceLocal;
 
@@ -7,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +20,8 @@ public class PropertyReviewServiceLocalImpl implements PropertyReviewServiceLoca
 
     @Override
     public Optional<PropertyReview> findOne(Integer id) {
-        throw new UnsupportedOperationException("PropertyReviewServiceLocalImpl::findOne is not implemented");
+        PropertyReview propertyReview = em.find(PropertyReview.class, id);
+        return propertyReview == null ? Optional.empty() : Optional.of(propertyReview);
     }
 
     @Override
@@ -28,12 +31,17 @@ public class PropertyReviewServiceLocalImpl implements PropertyReviewServiceLoca
 
     @Override
     public void save(PropertyReview o) {
-        throw new UnsupportedOperationException("PropertyReviewServiceLocalImpl::save is not implemented");
+        if (o != null) {
+            em.persist(o);
+        } else {
+            throw new IllegalArgumentException("PropertyReview cannot be null.");
+        }
     }
 
     @Override
     public void delete(Integer id) {
-
+        PropertyReview propertyReview = findOne(id).orElseThrow(NotFoundException::new);
+        em.remove(propertyReview);
     }
 
     @Override
@@ -47,5 +55,10 @@ public class PropertyReviewServiceLocalImpl implements PropertyReviewServiceLoca
     @Override
     public List<PropertyReview> retrieveAllByPropertyId(int propertyId, int page, int size) {
         throw new UnsupportedOperationException("PropertyReviewServiceLocalImpl::retrieveAllByPropertyId is not implemented");
+    }
+
+    @Override
+    public void addReview(PropertyReview propertyReview) {
+
     }
 }

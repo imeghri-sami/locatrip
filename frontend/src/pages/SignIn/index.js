@@ -1,96 +1,118 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-//import SignUp from "./signup.js";
-//import App from "../App.js";
+import React, { useState } from "react";
+import { TextField, Button, Container, Grid, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function SignIn(props) {
-  const handleSubmit = (event) => {
-    //const rootElement=document.getElementById("login");
-    //ReactDOM.createRoot(rootElement).render(<App/>);
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(8),
+  },
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+const LoginForm = () => {
+  const classes = useStyles();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Perform login request using Axios
+      const response = await axios.post("users/authenticate", {
+        email,
+        password,
+      });
+
+      // Handle successful login
+      console.log("Logged in successfully!", response.data);
+
+      // Redirect to home page or dashboard
+      //history.push("/dashboard");
+    } catch (error) {
+      // Handle login error
+      setError(true);
+      console.error("Login failed!", error);
+    }
   };
 
-  const handleSignUp = (event) => {
-    //const rootElement = document.getElementById('container forms');
-    //ReactDOM.createRoot(rootElement).render(<SignUp />);
-  };
-
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+  const handleSignup = () => {
+    navigate("/signup");
   };
 
   return (
-    <>
-      <section id="container forms" className="container forms">
-        <div className="form login">
-          <div className="form-content">
-            <header id="loginHeader">Login</header>
-            <form action="#">
-              <TextField
-                sx={{
-                  width: "100%",
-                }}
-                id="outlined-basic"
-                label="username"
-                variant="outlined"
-              />
-              <FormControl
-                sx={{ marginTop: "5px", width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                />
-              </FormControl>
-
-              <div className="field button-field ">
-                <button onClick={handleSubmit} id="login_bottom">
-                  LogIn
-                </button>
-              </div>
-            </form>
-            <div className="form-link">
-              <br />
-              <span> Don't have an account yet?</span>
-            </div>
-            <div className="field button-field ">
-              <button onClick={handleSignUp} id="signup_buttom">
-                SignUp
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+    <Container component="main" maxWidth="xs" className={classes.container}>
+      <Typography component="h1" variant="h5" align="center">
+        Locatrip | <small>Login</small>
+      </Typography>
+      <form className={classes.form} onSubmit={handleLogin}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              value={email}
+              error={error}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              error={error}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {error && (
+              <p style={{ color: "red" }}>Email or Password is incorrect</p>
+            )}
+          </Grid>
+        </Grid>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          sx={{ mt: 2 }}
+        >
+          Login
+        </Button>
+        <Button
+          fullWidth
+          variant="contained"
+          color="error"
+          className={classes.submit}
+          onClick={handleSignup}
+          sx={{ mt: 2 }}
+        >
+          Sign Up
+        </Button>
+      </form>
+    </Container>
   );
-}
+};
 
-export default SignIn;
+export default LoginForm;

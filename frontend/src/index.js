@@ -1,6 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 import axios from "axios";
 
@@ -8,8 +8,9 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:8080/locatrip-1.0-SNAPSHOT/api/v1";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
-  <React.StrictMode>
+  <Router>
     <App />
-  </React.StrictMode>
+  </Router>
 );

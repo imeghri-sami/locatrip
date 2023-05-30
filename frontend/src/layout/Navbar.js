@@ -1,78 +1,147 @@
 import React from "react";
-import logo from "../assets/loogo.jpg";
-//import Login from "./Login";
-import ReactDOM from "react-dom";
-import { BiWorld, BiUser } from "react-icons/bi";
-import { FiSearch } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  InputBase,
+  IconButton,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { makeStyles } from "@mui/styles";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import LogoutIcon from "@mui/icons-material/Logout";
+import HomeIcon from "@mui/icons-material/Home";
 
-function Navbar() {
-  const history = useHistory();
-  const authenticated = false;
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  title: {
+    flexGrow: 1,
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.common.white,
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(3),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+
+const Header = () => {
+  const classes = useStyles();
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    // Handle search logic
+    // ...
+  };
+
+  const handleSignIn = () => {
+    navigate("/signin"); // Assuming '/signin' is the path for the signin page
+  };
+
+  const handleProfile = () => {
+    // Handle profile logic
+    // ...
+  };
+
+  const handleLogout = () => {
+    // Handle logout logic
+    // ...
+  };
 
   return (
-    <div id="navbar">
-      <div>
-        <div className="flex justify-between items-center my-6 sm:mx-6 lg:mx-12 md:mx-10">
-          {/*Left */}
-          <div className="bg-red-400 h-20 flex">
-            <img src={logo} className="object-cover -my-5 " />
-          </div>
-          {/*MIDDLE */}
-          <div className="flex relative justify-center items-center shadow-sm shadow-gray-400 border rounded-full">
-            <input
-              type="search"
-              placeholder=""
-              className="py-2.5 w-[20rem] rounded-full outline-0"
+    <AppBar color="default" position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <Typography variant="h6" className={classes.title}>
+          Locatrip
+        </Typography>
+        <div className={classes.search}>
+          <form onSubmit={handleSearch}>
+            <InputBase
+              sx={{ p: 1 }}
+              placeholder="Search..."
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
             />
-            <div className="flex justify-between absolute w-full pr-16 p1-6 font-semibold text-gray-600">
-              <button className=" w-full">Place</button>
-              <button className="border-1 border-x px-6 ">Time</button>
-              <button className=" w-full text-gray-600/60 p1-2">
-                Group Size
-              </button>
-            </div>
-            <div className="flex bg-[#FACC2E] p-2 rounded-full mr-2">
-              <FiSearch className="text-white" />
-            </div>
-          </div>
-          {/*Right */}
-          <div className="flex  items-center pr-3 font-semibold text-gray-600">
-            <p className="text-[17px]">Rent House</p>
-
-            <div className="flex items-center mx-4 gap-1">
-              <BiWorld className="mx-4" />
-              <div className="">EN</div>
-            </div>
-            {authenticated ? (
-              <button
-                className="flex items-center  border px-4 py-2 rounded-full gap-3 bg-[#FACC2E]
-                text-white font-bold shadow-lg
-                 shadow-gray-300 hover:bg-[#FACC2E] duration-100 ease-out"
-                onClick={() => history.push("/")}
-              >
-                <p>Sign out</p>
-                <BiUser className="text-[19px]" />
-              </button>
-            ) : (
-              <button
-                className="flex items-center  border px-4 py-2 rounded-full gap-3 bg-[#FACC2E]
-                 text-white font-bold shadow-lg
-                  shadow-gray-300 hover:bg-[#FACC2E] duration-100 ease-out"
-              >
-                <Link to="login">
-                  {" "}
-                  <p>Sign in</p>
-                </Link>
-                <BiUser className="text-[19px]" />
-              </button>
-            )}
-          </div>
+          </form>
         </div>
-      </div>
-    </div>
+        <Button
+          size="small"
+          sx={{ mx: 1 }}
+          variant="contained"
+          color="warning"
+          onClick={handleSignIn}
+        >
+          Sign In
+        </Button>
+        <Button
+          size="small"
+          sx={{ mx: 1 }}
+          startIcon={<AccountBoxIcon />}
+          variant="outlined"
+          color="info"
+          onClick={handleProfile}
+        >
+          Profile
+        </Button>
+        <Button
+          size="small"
+          sx={{ mx: 1 }}
+          startIcon={<LogoutIcon />}
+          variant="contained"
+          color="error"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+        <Button
+          size="small"
+          sx={{ mx: 1 }}
+          startIcon={<HomeIcon />}
+          variant="outlined"
+          onClick={handleLogout}
+        >
+          Home
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
-}
+};
 
-export default Navbar;
+export default Header;

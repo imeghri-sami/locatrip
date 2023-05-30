@@ -1,9 +1,6 @@
 package fr.n7;
 
-import fr.n7.resources.PropertyImageResource;
-import fr.n7.resources.PropertyResource;
-import fr.n7.resources.PropertyReviewResource;
-import fr.n7.resources.UserResource;
+import fr.n7.resources.*;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -19,6 +16,9 @@ public class LocatripApp extends Application {
         set.add(PropertyImageResource.class);
         set.add(UserResource.class);
         set.add(PropertyReviewResource.class);
+        set.add(BookingResource.class);
+        set.add(CityResource.class);
+        set.add(CountryResource.class);
         return set;
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
 public interface PropertyReviewServiceLocal extends IDAO<PropertyReview, Integer> {
     List<PropertyReview> retrieveAllByPropertyId(int propertyId);
     List<PropertyReview> retrieveAllByPropertyId(int propertyId, int page, int size);
+    void addReview(PropertyReview propertyReview);
 }

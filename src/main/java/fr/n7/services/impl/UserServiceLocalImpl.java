@@ -51,6 +51,6 @@ public class UserServiceLocalImpl implements UserServiceLocal {
 
     @Override
     public boolean isEmailExists (String email){
-        return findByEmail(email).orElse(null) == null;
+        return findByEmail(email).orElse(null) != null;
     }
 }

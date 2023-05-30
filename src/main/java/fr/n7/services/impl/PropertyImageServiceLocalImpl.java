@@ -1,14 +1,15 @@
 package fr.n7.services.impl;
 
-import fr.n7.entities.Property;
 import fr.n7.entities.PropertyImages;
 import fr.n7.services.PropertyImageServiceLocal;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Stateless
 public class PropertyImageServiceLocalImpl implements PropertyImageServiceLocal {
@@ -17,8 +18,9 @@ public class PropertyImageServiceLocalImpl implements PropertyImageServiceLocal 
     private EntityManager em;
 
     @Override
-    public Optional<PropertyImages> findOne(Integer id) {
-        return Optional.of(em.find(PropertyImages.class, id));
+    public Optional<PropertyImages> findOne(UUID id) {
+        PropertyImages propertyImages = em.find(PropertyImages.class, id);
+        return propertyImages == null ? Optional.empty() : Optional.of(propertyImages);
     }
 
     @Override
@@ -28,11 +30,12 @@ public class PropertyImageServiceLocalImpl implements PropertyImageServiceLocal 
 
     @Override
     public void save(PropertyImages o) {
-        throw new UnsupportedOperationException("PropertyImageServiceLocalImpl::save is not implemented");
+        em.persist(o);
     }
 
     @Override
-    public void delete(Integer id) {
-
+    public void delete(UUID id) {
+        PropertyImages propertyImages = findOne(id).orElseThrow(NotFoundException::new);
+        em.remove(propertyImages);
     }
 }

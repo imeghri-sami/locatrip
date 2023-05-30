@@ -1,20 +1,17 @@
 import React from "react";
-import Header from "./Navbar";
-import Main from "./Main";
 import { Route, Routes } from "react-router-dom";
 import Properties from "../pages/Properties";
 import { Box } from "@mui/material";
 import Property from "../pages/Property";
 
-const Master = ({ children }) => {
+const Main = () => {
   return (
-    <>
-      <Header />
-      <Box my={12} width={"100%"}>
-        {children}
-      </Box>
-    </>
+    <Box my={12} width={"100%"}>
+      <Routes>
+        <Route exact path="/properties/:id" element={<Property />} />
+      </Routes>
+    </Box>
   );
 };
 
-export default Master;
+export default Main;

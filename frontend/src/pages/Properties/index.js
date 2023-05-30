@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Rental from "../../components/Rental";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import axios from "axios";
+import PropertyCard from "../../components/PropertyCard";
 
 function Properties() {
   const [properties, setProperties] = useState([]);
@@ -20,29 +20,28 @@ function Properties() {
   }, []);
 
   return (
-    <div className="pt-3 sm:pt-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-        {loading ? (
-          <div className="flex justify-center">
-            <CircularProgress />
-          </div>
-        ) : (
-          properties.map((rental) => (
-            <Rental
+    <>
+      {loading ? (
+        <div className="flex justify-center">
+          <CircularProgress />
+        </div>
+      ) : (
+        <Stack direction="row" justifyContent="center" flexWrap="wrap">
+          {properties.map((rental) => (
+            <PropertyCard
+              key={rental.id}
               title={rental.name}
-              image={
-                "http://localhost:8080/locatrip-1.0-SNAPSHOT/api/v1/" +
-                rental.images[0].imagePath
-              }
+              address={rental.address}
+              image={rental.images[0]}
               price={rental.price}
               description={rental.description}
-              avaDateEnd={rental.availabilityEndDate}
-              avaDateStart={rental.availabilityStartDate}
+              endDate={rental.availabilityEndDate}
+              startDate={rental.availabilityStartDate}
             />
-          ))
-        )}
-      </div>
-    </div>
+          ))}
+        </Stack>
+      )}
+    </>
   );
 }
 

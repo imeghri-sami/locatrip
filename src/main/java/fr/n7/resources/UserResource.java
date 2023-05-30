@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 
 @Path("/users")
 public class UserResource {
@@ -39,6 +40,8 @@ public class UserResource {
 
     @POST
     @Path("/register")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response register (User user) {
 
         if ( userServiceLocal.isEmailExists(user.getEmail()) )
@@ -47,11 +50,22 @@ public class UserResource {
                     .entity("User already exists with this email")
                     .build();
 
-
+        user.setCreated(new Date());
         userServiceLocal.save(user);
         return Response.status(Response.Status.CREATED).entity(user).build();
     }
 
-    // TODO : retrieve a user by its email
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveByEmail(@QueryParam("email") String email){
+        try {
+            User u = userServiceLocal.findByEmail(email).orElseThrow(NotFoundException::new);
+            return Response.ok(u).build();
+        }catch (NotFoundException ex){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+    }
 
 }

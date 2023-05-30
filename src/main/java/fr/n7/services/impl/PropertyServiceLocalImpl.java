@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,8 @@ public class PropertyServiceLocalImpl implements PropertyServiceLocal {
 
     @Override
     public Optional<Property> findOne(Integer id) {
-        return Optional.of(em.find(Property.class, id));
+        Property p = em.find(Property.class, id);
+        return p == null ? Optional.empty() : Optional.of(p);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class PropertyServiceLocalImpl implements PropertyServiceLocal {
     @Override
     public List<Property> findByType(String type) {
         TypedQuery<Property> query = em.createQuery(
-                "FROM Property p WHERE p.type.name = :type", Property.class
+                "FROM Property p WHERE p.type = :type", Property.class
         );
 
 

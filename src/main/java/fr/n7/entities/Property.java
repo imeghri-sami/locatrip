@@ -32,13 +32,17 @@ public class Property {
 
     private int guestCount = 0;
 
-    @OneToMany(mappedBy="property", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="property")
     private List<PropertyImages> images;
 
-    @ManyToOne
-    private PropertyType type;
+    private String type;
+
+    private String currency;
 
     @ManyToOne
-    private Currency currency;
+    private User user;
+
+    @ManyToOne
+    private City city;
 
 }
