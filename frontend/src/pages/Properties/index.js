@@ -30,6 +30,7 @@ function Properties() {
           {properties.map((rental) => (
             <PropertyCard
               key={rental.id}
+              id={rental.id}
               title={rental.name}
               address={rental.address}
               image={rental.images[0]}

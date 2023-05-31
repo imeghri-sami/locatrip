@@ -1,18 +1,14 @@
-import React, { useState } from "react";
-import {
-  Paper,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Avatar,
-  TextField,
-  Button,
-} from "@mui/material";
+import React, { useContext, useState } from "react";
+import { Paper, Typography, TextField, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PropertyImages from "../../components/PropertyImages";
+import PropertyInfo from "../../components/PropertyInfo";
+import { useParams } from "react-router-dom";
+import UserCard from "../../components/UserCard";
+import { useEffect } from "react";
+import axios from "axios";
+import Comments from "../../components/Comments";
+import { UserContext } from "../../context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,93 +32,114 @@ const useStyles = makeStyles((theme) => ({
 
 const Page = () => {
   const classes = useStyles();
-  const [property, setProperty] = useState(undefined);
+  const [property, setProperty] = useState({});
   const [comments, setComments] = useState([]);
+  const params = useParams();
+  const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useContext(UserContext);
 
-  return (
+  useEffect(() => {
+    // Retrieve property
+    axios
+      .get(`properties/${params.id}`) // Replace with your API endpoint
+      .then((response) => {
+        console.log(response.data);
+        setProperty(response.data);
+      })
+      .catch((error) => {
+        console.error("Error retrieving property:", error);
+      });
+
+    // Retrieve comments
+    axios
+      .get("comments", { params: { propertyId: params.id } }) // Replace with your API endpoint
+      .then((response) => {
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.error("Error retrieving comments:", error);
+      });
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Send comment using Axios POST request
+    const data = {
+      comment: comment,
+      rating: 3,
+      property: { id: params.id },
+      user: { id: 1, firstName: "test", lastName: "test" },
+      added: new Date(),
+    };
+
+    setComments((prevComments) => {
+      console.log([...prevComments, data]);
+      return [...prevComments, data];
+    });
+    setComment("");
+    setLoading(!loading);
+    /*axios
+      .post("/comments", data, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+          "Access-Control-Allow-Headers":
+            "Origin, X-Requested-With, Content-Type, Accept",
+        },
+      })
+      .then((response) => {
+        console.log("Comment submitted:", response.data);
+        setLoading(!loading);
+        setComment("");
+      })
+      .catch((error) => {
+        console.error("Error submitting comment:", error);
+      });*/
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  return property === undefined ? (
+    ""
+  ) : (
     <div className={classes.root}>
-      <PropertyImages />
-
-      <Paper className={classes.section}>
-        <Typography variant="h6" gutterBottom>
-          User Information
-        </Typography>
-        <Avatar>
-          <AccountCircleIcon />
-        </Avatar>
-        <Typography variant="h6" gutterBottom>
-          First Name Last Name
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          About Text
-        </Typography>
-      </Paper>
-
-      <Paper className={classes.section}>
-        <Typography variant="h6" gutterBottom>
-          Property Information
-        </Typography>
-        <List>
-          <ListItem>
-            <ListItemText primary="Name" secondary="Property Name" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText
-              primary="Description"
-              secondary="Property Description"
-            />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Guests" secondary="Number of Guests" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Bedrooms" secondary="Number of Bedrooms" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Beds" secondary="Number of Beds" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Price" secondary="Property Price" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Type" secondary="Property Type" />
-          </ListItem>
-        </List>
-      </Paper>
+      <PropertyImages images={property.images} />
+      <UserCard user={property.user} />
+      <PropertyInfo
+        name={property.name}
+        description={property.description}
+        guests={property.guestCount}
+        beds={property.bedCount}
+        bedrooms={property.bedroomCount}
+        endDate={property.availabilityStartDate}
+        startDate={property.availabilityEndDate}
+        type={property.type}
+        price={property.price}
+      />
 
       <Paper className={classes.commentSection}>
         <Typography variant="h6" gutterBottom>
           Comments
         </Typography>
-        <TextField
-          label="Leave a comment"
-          multiline
-          rows={4}
-          variant="outlined"
-          className={classes.commentTextField}
-        />
-        <Button variant="contained" color="primary">
-          Submit
-        </Button>
-        <List>
-          {comments.map((comment, index) => (
-            <React.Fragment key={index}>
-              <ListItem>
-                <ListItemText
-                  primary={comment.author}
-                  secondary={comment.text}
-                />
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Leave a comment"
+            multiline
+            rows={4}
+            variant="outlined"
+            className={classes.commentTextField}
+            value={comment}
+            onChange={handleCommentChange}
+          />
+          <Button type="submit" fullWidth variant="contained" color="primary">
+            Submit
+          </Button>
+        </form>
+        <Comments comments={comments} />
       </Paper>
     </div>
   );

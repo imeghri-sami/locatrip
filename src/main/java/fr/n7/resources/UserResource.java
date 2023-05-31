@@ -1,6 +1,7 @@
 package fr.n7.resources;
 
 import fr.n7.entities.User;
+import fr.n7.resources.requests.AuthReq;
 import fr.n7.services.UserServiceLocal;
 import fr.n7.services.utils.JWTUtils;
 
@@ -19,7 +20,9 @@ public class UserResource {
     @POST
     @Path("/authenticate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response authenticate(@FormParam("email") String email, @FormParam("password") String passwd){
+    public Response authenticate(AuthReq authReq){
+        String email = authReq.getEmail();
+        String passwd = authReq.getPassword();
         try{
             User user = userServiceLocal.findByEmail(email).orElseThrow(NotFoundException::new);
 

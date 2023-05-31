@@ -24,15 +24,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PropertyImages = () => {
+const PropertyImages = ({ images = [] }) => {
   const classes = useStyles();
-
-  const images = [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png",
-    // Add more image URLs here
-  ];
 
   return (
     <Paper className={classes.section}>

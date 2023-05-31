@@ -34,19 +34,12 @@ public class PropertyResource {
     public Response retrieveAll(){
         return Response
                 .ok(toDTO(propertyServiceLocal.findAll()))
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Credentials", "true")
-                .header("Access-Control-Allow-Headers",
-                        "origin, content-type, accept, authorization")
-                .header("Access-Control-Allow-Methods",
-                        "GET, POST, PUT, DELETE, OPTIONS, HEAD")
                 .build();
     }
 
     @GET
-    @Path("/{type}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllByType(@PathParam("type") String type){
+    public Response retrieveAllByType(@QueryParam("type") String type){
         return Response
                 .ok(toDTO(propertyServiceLocal.findByType(type)))
                 .build();
@@ -104,7 +97,7 @@ public class PropertyResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-        public Response retrieveById(@PathParam("id") int id){
+    public Response retrieveById(@PathParam("id") int id){
         try{
             Property p = propertyServiceLocal.findOne(id).orElseThrow(NotFoundException::new);
             return Response.ok(toDTO(p)).build();

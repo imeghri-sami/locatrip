@@ -31,14 +31,9 @@ public class PropertyImageResource {
 
         // Retrieve the image data from the database
         PropertyImages propertyImage = propertyImageServiceLocal.findOne(UUID.fromString(id)).orElseThrow(NotFoundException::new);
-
+        java.nio.file.Path imagePath = java.nio.file.Paths.get(UPLOAD_DIRECTORY, id);
         try {
-            File imageFile = new File(
-                    this.getClass()
-                            .getClassLoader()
-                            .getResource("images/"+propertyImage.getId())
-                            .getFile()
-            );
+            File imageFile = new File(UPLOAD_DIRECTORY + id);
 
             //File imageFile = new File(this.getClass().getClassLoader().getResource("images/1.jpg").toURI());
 
@@ -89,7 +84,7 @@ public class PropertyImageResource {
         property.setId(propertyId);
         propertyImages.setId(id);
         propertyImages.setProperty(property);
-        propertyImages.setImagePath(getDeploymentURL() + "/images/" + id.toString());
+        propertyImages.setImagePath(getDeploymentURL() + id.toString());
         propertyImageServiceLocal.save(propertyImages);
 
     }

@@ -12,6 +12,8 @@ import { makeStyles } from "@mui/styles";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -59,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
+  const { user, setUser } = useContext(UserContext);
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -69,7 +72,7 @@ const Header = () => {
   };
 
   const handleSignIn = () => {
-    navigate("/signin"); // Assuming '/signin' is the path for the signin page
+    navigate("/login"); // Assuming '/signin' is the path for the signin page
   };
 
   const handleProfile = () => {
@@ -78,8 +81,13 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    // Handle logout logic
-    // ...
+    localStorage.removeItem("token");
+    setUser(undefined);
+    navigate("/");
+  };
+
+  const handleHome = () => {
+    navigate("/");
   };
 
   return (
@@ -101,41 +109,47 @@ const Header = () => {
             />
           </form>
         </div>
-        <Button
-          size="small"
-          sx={{ mx: 1 }}
-          variant="contained"
-          color="warning"
-          onClick={handleSignIn}
-        >
-          Sign In
-        </Button>
-        <Button
-          size="small"
-          sx={{ mx: 1 }}
-          startIcon={<AccountBoxIcon />}
-          variant="outlined"
-          color="info"
-          onClick={handleProfile}
-        >
-          Profile
-        </Button>
-        <Button
-          size="small"
-          sx={{ mx: 1 }}
-          startIcon={<LogoutIcon />}
-          variant="contained"
-          color="error"
-          onClick={handleLogout}
-        >
-          Logout
-        </Button>
+        {user === undefined && (
+          <Button
+            size="small"
+            sx={{ mx: 1 }}
+            variant="contained"
+            color="warning"
+            onClick={handleSignIn}
+          >
+            Sign In
+          </Button>
+        )}
+        {user !== undefined && (
+          <Button
+            size="small"
+            sx={{ mx: 1 }}
+            startIcon={<AccountBoxIcon />}
+            variant="outlined"
+            color="info"
+            onClick={handleProfile}
+          >
+            Profile
+          </Button>
+        )}
+        {user !== undefined && (
+          <Button
+            size="small"
+            sx={{ mx: 1 }}
+            startIcon={<LogoutIcon />}
+            variant="contained"
+            color="error"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        )}
         <Button
           size="small"
           sx={{ mx: 1 }}
           startIcon={<HomeIcon />}
           variant="outlined"
-          onClick={handleLogout}
+          onClick={handleHome}
         >
           Home
         </Button>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextField, Button, Container, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../../context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 const LoginForm = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [user, setUser] = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -37,8 +39,15 @@ const LoginForm = () => {
       // Handle successful login
       console.log("Logged in successfully!", response.data);
 
+      localStorage.setItem("token", response.data);
+
+      try {
+        const response = await axios.get("/users", { params: { email } });
+        setUser(response.data);
+        navigate("/");
+      } catch (error) {}
+
       // Redirect to home page or dashboard
-      //history.push("/dashboard");
     } catch (error) {
       // Handle login error
       setError(true);
